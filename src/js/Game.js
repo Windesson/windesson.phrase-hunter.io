@@ -24,7 +24,6 @@ class Game {
     //Hides the start screen overlay and 
     //adds the chosen phrase to the board
     startGame() {
-        this.resetGame();
         this._activePhrase = new Phase(this.getRandomPhrase());
         this._activePhrase.addPhraseToDisplay();
 
@@ -34,7 +33,10 @@ class Game {
     //Resetting the gameboard between games.
     resetGame() {
         $("#phrase ul").empty();
-        $(".key").each(function () { $(this).removeClass("chosen"); $(this).removeClass("wrong"); $(this).attr("disabled", false); });
+        $(".key").each(function () {
+            $(this).removeClass("chosen wrong");
+            $(this).attr("disabled", false);
+        });
         $(".tries img[src='images/lostHeart.png']").attr("src", "images/liveHeart.png");
     }
 
@@ -54,22 +56,22 @@ class Game {
     //controls most of the game logic.
     handleInteraction() {
 
-            const $btn = $(event.target);
-            if (!$btn.hasClass('key')) return;
-            const clickedLetter = $btn.html();
+        const $btn = $(event.target);
+        if (!$btn.hasClass('key')) return;
+        const clickedLetter = $btn.html();
 
-            //Disable the selected letter’s onscreen keyboard button
-            $btn.attr("disabled", true);
+        //Disable the selected letter’s onscreen keyboard button
+        $btn.attr("disabled", true);
 
-            //checks to see if the button clicked by the player matches a letter in the phrase
-            if (this._activePhrase.checkLetter(clickedLetter)) {
-                $btn.addClass('chosen');
-                this._activePhrase.showMatchedLetter(clickedLetter);
-                if (this.checkForWin()) this.gameOver();
-            } else {
-                $btn.addClass('wrong');
-                this.removeLife();
-            }
+        //checks to see if the button clicked by the player matches a letter in the phrase
+        if (this._activePhrase.checkLetter(clickedLetter)) {
+            $btn.addClass('chosen');
+            this._activePhrase.showMatchedLetter(clickedLetter);
+            if (this.checkForWin()) this.gameOver();
+        } else {
+            $btn.addClass('wrong');
+            this.removeLife();
+        }
 
     }
 
@@ -93,10 +95,21 @@ class Game {
     //Displays the original start screen overlay and 
     //a friendly win or loss message
     gameOver() {
-        $("#overlay").show();
-        const hasWin = this.checkForWin();
+       
+        const $overLay = $("#overlay");
         const $gameOverMessage = $("#game-over-message");
-        hasWin ? $gameOverMessage.html("Congrats! YOU'VE WON!") :
+        if (this.checkForWin()) {
+            $gameOverMessage.html("Congrats! YOU'VE WON!");
+            $overLay.removeClass("lose");
+            $overLay.addClass("win");
+        } else {
             $gameOverMessage.html("Sorry you just lost the Game. Please try again..");
+            $overLay.removeClass("win");
+            $overLay.addClass("lose");
+        }
+
+        $overLay.show();
+        this.resetGame();
+
     }
 }
