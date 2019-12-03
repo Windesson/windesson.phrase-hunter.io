@@ -4,7 +4,7 @@
 class Phase {
 
     constructor(phrase) {
-        this._phrase = phrase.toLowerCase(); 
+        this.phrase = phrase.toLowerCase(); 
     }
 
     //adds letter placeholders to the display when the game starts.
@@ -12,7 +12,7 @@ class Phase {
         let $phraseList = $("#phrase ul");
         $phraseList.empty();
 
-        this._phrase
+        this.phrase
             .split('')
             .forEach(letter => {
                 if (/\s+/.test(letter)) {
@@ -26,7 +26,7 @@ class Phase {
 
     //checks to see if the letter selected by the player matches a letter in the phrase.
     checkLetter(letter) {
-        return this._phrase.includes(letter);
+        return this.phrase.includes(letter);
     }
 
     //reveals the letter(s) on the board that matches the player's selection.
